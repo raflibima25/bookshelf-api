@@ -68,7 +68,7 @@ const addBookHandler = (request, h) => {
 };
 
 // GET
-const getAllBookHandler = (request, h) => {
+const getAllBooksHandler = (request, h) => {
 	const { reading, name, finished } = request.query;
 
 	let mapedBooks = books;
@@ -206,4 +206,4 @@ const deleteBookByIdHandler = (request, h) => {
 	return response;
 };
 
-module.exports = { addBookHandler, getAllBookHandler, getBookByIdHandler, editBookByIdHandler, deleteBookByIdHandler };
+module.exports = { addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByIdHandler, deleteBookByIdHandler };
