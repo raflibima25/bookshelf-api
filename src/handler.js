@@ -68,11 +68,58 @@ const addBookHandler = (request, h) => {
 };
 
 // GET
-const getAllBookHandler = () => ({
-	status: "success",
-	data: {
-		books,
-	},
-});
+const getAllBookHandler = (request, h) => {
+	const { reading, name, finished } = request.query;
 
-module.exports = { addBookHandler, getAllBookHandler };
+	let mapedBooks = books;
+
+	if (name !== undefined) {
+		mapedBooks = mapedBooks.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+	}
+
+	if (reading !== undefined) {
+		mapedBooks = mapedBooks.filter((book) => book.reading === !!Number(reading));
+	}
+
+	if (finished !== undefined) {
+		mapedBooks = mapedBooks.filter((book) => book.finished === !!Number(finished));
+	}
+
+	const response = h.response({
+		status: "success",
+		data: {
+			books: mapedBooks.map((book) => ({
+				id: book.id,
+				name: book.name,
+				publisher: book.publisher,
+			})),
+		},
+	});
+	response.code(200);
+	return response;
+};
+
+// GET BY ID
+const getBookByIdHandler = (request, h) => {
+	const { id } = request.params;
+
+	const book = books.filter((book) => book.id === id)[0];
+
+	if (book !== undefined) {
+		return {
+			status: "success",
+			data: {
+				book,
+			},
+		};
+	}
+
+	const response = h.response({
+		status: "fail",
+		message: "Buku tidak ditemukan",
+	});
+	response.code(404);
+	return response;
+};
+
+module.exports = { addBookHandler, getAllBookHandler, getBookByIdHandler };
